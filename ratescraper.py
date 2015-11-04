@@ -15,7 +15,7 @@ def get_calling_cost(country):
    Keyword arguments:
    country -- the country name to query
 
-   Returns: string
+   Returns: string representing the cost
    """
    driver = webdriver.Chrome()
    driver.get(SCRAPE_URL)
@@ -31,8 +31,11 @@ def get_calling_cost(country):
    tab_element = driver.find_element_by_id("paymonthly")
    tab_element.click()
 
-   # Confirm standard rates presence
-   return driver.find_element_by_id("standardRates")
+   # On the correct page, use xpath to find the calling cost - found in
+   # a specific table on the following table cell after content 'Landline'
+   cost_element = driver.find_element_by_xpath(
+      "//table[@id='standardRatesTable']//td[.='Landline']/following-sibling::td")
+   return cost_element.text
 
 if __name__ == "__main__":
    print(get_calling_cost("new zealand"))
